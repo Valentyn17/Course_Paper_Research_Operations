@@ -16,8 +16,8 @@ namespace CourseWorkApplication
             Scene scene2;
 
             GetSpeakers(out speakers);
-
-
+            GenerateSpeakers(out speakers, 12);
+            
             foreach (Speaker speaker in speakers)
             {
                 Console.WriteLine($"Number  {speaker.Number}\t" +
@@ -25,7 +25,6 @@ namespace CourseWorkApplication
                     $"End: {speaker.EndOfSpeech.TimeOfDay}\tProbability: {speaker.Probability: 0.000}"
                     );
             }
-
             ProbabilityAlgorithm(speakers, out scene1, out scene2);
             Console.WriteLine();
             Console.WriteLine();
@@ -91,8 +90,25 @@ namespace CourseWorkApplication
         }
 
 
+        static List<Speaker> CountProbability(List<Speaker> speakers)
+        {
+            double probabilitySum = 0;
+            foreach (var item in speakers)
+            {
+                item.Probability = 1 / (item.EndOfSpeech - item.StartOfSpeech).TotalMinutes;
+                probabilitySum += item.Probability;
+            }
+            double tempProbability = speakers[0].Probability;
+            speakers[0].Probability = tempProbability / probabilitySum;
+            for (int i = 1; i < speakers.Count; i++)
+            {
+                tempProbability += speakers[i].Probability;
+                speakers[i].Probability = tempProbability / probabilitySum;
+            }
+            return speakers;
+        }
 
-
+        
         static void GetSpeakers(out List<Speaker> speakers)
         {
             speakers = new List<Speaker>();
@@ -117,23 +133,33 @@ namespace CourseWorkApplication
         }
 
 
-        static List<Speaker> CountProbability(List<Speaker> speakers) 
+        static void GenerateSpeakers(out List<Speaker> speakers, int speakersCount)
         {
-            double probabilitySum = 0;
-            foreach (var item in speakers)
-            {
-                item.Probability=1 / (item.EndOfSpeech - item.StartOfSpeech).TotalMinutes;
-                probabilitySum += item.Probability;
-            }
-            double tempProbability = speakers[0].Probability;
-            speakers[0].Probability = tempProbability / probabilitySum;
-            for (int i = 1; i < speakers.Count; i++)
-            {
-                tempProbability+=speakers[i].Probability;
-                speakers[i].Probability=tempProbability / probabilitySum;
-            }
-            return speakers;
-        }
+            speakers = new List<Speaker>();
+            var rand = new Random();
 
+            int minSpeech = 15; //мінімальна довжина виступу 15 хв
+            int maxSpeech = 120; //максимальна довжина виступу 120 хв
+
+            DateTime startOfSpeeches = new DateTime(2022, 5, 26, 8, 0, 0);
+            DateTime endOfSpeeches = new DateTime(2022, 5, 26, 17, 0, 0);
+
+            /*максимальна кількість хвилин які можна додати(-15 бо доповідь триває  не менше 15 хвилин)*/
+            int maxMinutesToAdd = (int)(endOfSpeeches - startOfSpeeches).TotalMinutes - minSpeech;
+
+            for (int i = 0; i < speakersCount; i++)
+            {
+                int minutestoAddForStart = rand.Next(0, maxMinutesToAdd);
+                DateTime startOfSpeech = startOfSpeeches.AddMinutes(minutestoAddForStart);
+
+                /*якщо старт доповіді менше як за 2 год до кінця виступів  то кінець проміжку 
+                 буде кінець всіх виступів, а якщо ні то обимежуємо доповідь двома годинами при генерації*/
+                int endOfrange = Math.Min(minutestoAddForStart + maxSpeech, maxMinutesToAdd + minSpeech);
+                int minutesToAddForEnd = rand.Next(minutestoAddForStart + minSpeech, endOfrange);
+                DateTime endOfSpeech = startOfSpeeches.AddMinutes(minutesToAddForEnd);
+                speakers.Add(new Speaker(i + 1, startOfSpeech, endOfSpeech));
+
+            }
+        }
     }
 }
