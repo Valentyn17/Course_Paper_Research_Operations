@@ -40,14 +40,14 @@ namespace CourseWorkApplication
                     /*Вибираємо спікера відповідно до згенерованого  числа та ймовірності вибору кожного спікера*/
                     var speaker = speakers.SkipWhile(x => x.Probability <= randomDouble).ToList()[0];  
 
-                    if (scene1now.CheckForAdding(speaker)) //перевірка чи можемо додати до першої сцени
+                    if (scene1now.CheckForAddProbabilityAlg(speaker)) //перевірка чи можемо додати до першої сцени
                     {
                         scene1now.AddSpeaker(speaker);
                         speakers.Remove(speaker);
 
                         inCounter = 0;
                     }
-                    else if (scene2now.CheckForAdding(speaker))  //перевірка чи можемо додати до другої сцени
+                    else if (scene2now.CheckForAddProbabilityAlg(speaker))  //перевірка чи можемо додати до другої сцени
                     {
                         scene2now.AddSpeaker(speaker);
                         speakers.Remove(speaker);

@@ -16,13 +16,19 @@ namespace CourseWorkApplication
             Speakers=new List<Speaker>();
         }
 
-
         public void AddSpeaker(Speaker speaker)
         {
             Speakers.Add(speaker);
         }
 
-        public bool CheckForAdding(Speaker speaker) {
+        public bool CheckForAddGreedyAlg(Speaker speaker)
+        {
+            if(Speakers.Count == 0 || speaker.EndOfSpeech > Speakers.Last().StartOfSpeech)
+               return true;
+            return false;
+        }
+
+        public bool CheckForAddProbabilityAlg(Speaker speaker) {
             if (Speakers.Count == 0)
                 return true;
             foreach (var item in Speakers)
