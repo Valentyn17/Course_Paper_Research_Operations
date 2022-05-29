@@ -28,6 +28,14 @@ namespace CourseWorkApplication
             return false;
         }
 
+        public bool Exist(Speaker speaker)
+        {
+            if (Speakers.Exists(element => element == speaker))
+                return true;
+            return false;
+        }
+
+
         public bool CheckForAddProbabilityAlg(Speaker speaker) {
             if (Speakers.Count == 0)
                 return true;

@@ -1,4 +1,5 @@
 ﻿using CourseWorkApplication.Schedulers;
+using CourseWorkApplication.Schedulers.BFS_Scheduler;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,7 +16,7 @@ namespace CourseWorkApplication
             Scene scene2;
 
             GetSpeakers(out speakers);
-            GenerateSpeakers(out speakers, 12);
+           // GenerateSpeakers(out speakers, 12);
 
             foreach (Speaker speaker in speakers)
             {
@@ -26,8 +27,11 @@ namespace CourseWorkApplication
             }
 
             Console.WriteLine();
-            ProbabilityScheduler prScheduler = new ProbabilityScheduler(speakers);
-            prScheduler.CalculateScedule(out scene1, out scene2);
+            //ProbabilityScheduler prScheduler = new ProbabilityScheduler(speakers);
+            //prScheduler.CalculateScedule(out scene1, out scene2);
+            speakers = speakers.OrderBy(x => x.EndOfSpeech).ToList() ;
+            TreeScheduler treeScheduler = new TreeScheduler(speakers);
+            treeScheduler.calculateShedule(out scene1, out scene2);
             Console.WriteLine();
             Console.WriteLine("First scene shedule");
             scene1.ShowSchedule();
@@ -36,6 +40,7 @@ namespace CourseWorkApplication
             Console.WriteLine("Value of target function : {0}", scene1.Count + scene2.Count);
 
         }
+
 
         /// <summary>
         /// Gets speakers'info from file
