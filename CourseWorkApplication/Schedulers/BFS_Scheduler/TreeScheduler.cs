@@ -6,22 +6,14 @@ namespace CourseWorkApplication.Schedulers.BFS_Scheduler
 {
     public class TreeScheduler
     {
-        public Node Root { get; set; }                     //кореневий вузол дерева станів (перший спікер з відсортованої вхідної множини)
+        private Node Root { get; set; }                     //кореневий вузол дерева станів (перший спікер з відсортованої вхідної множини)
         List<Speaker> _speakers;                           //вхідна множина доступних спікерів (множина Х) 
-
-        //public int stageNumber;                            //номер сцени
-
-
-
-       // public List<Speaker> res = new List<Speaker>();    //вихідний набір спікерів для певної сцени
-       // public List<Speaker> left = new List<Speaker>();   //оновлена множина доступних спікерів (множина Х)
         public TreeScheduler(List<Speaker> Speakers)
         {
             _speakers = Speakers;
-            //stageNumber = stage;
             buildTree();
         }
-        public void buildTree()                            //ф-ція побудови дерева станів
+        private void buildTree()                            //ф-ція побудови дерева станів
         {
             foreach (Speaker i in _speakers)
             {
@@ -38,7 +30,7 @@ namespace CourseWorkApplication.Schedulers.BFS_Scheduler
                 }
             }
         }
-        public void AddToTree(Speaker speaker, Node current)   //ф-ція додавання вузла, що відповідає спікеру до дерева станів
+        private void AddToTree(Speaker speaker, Node current)   //ф-ція додавання вузла, що відповідає спікеру до дерева станів
         {
             if (current.DeclinedSpeakerNode != null)           //доходимо до листка вправо
             {
@@ -68,7 +60,7 @@ namespace CourseWorkApplication.Schedulers.BFS_Scheduler
                 }
             }
         }
-        public void calculateShedule(out Scene  scene1, out Scene scene2)                         //функція складання розкладу по дереву станів
+        public void CalculateSchedule(out Scene  scene1, out Scene scene2)                         //функція складання розкладу по дереву станів
         {
             scene1 = new Scene();
             scene2 = new Scene();
@@ -83,7 +75,7 @@ namespace CourseWorkApplication.Schedulers.BFS_Scheduler
             calculateShedule_Helper(Root, scene2);
 
         }
-        public void calculateShedule_Helper(Node parent, Scene scene)       //допоміжна рекурсивна функція для складання розкладу по дереву станів
+        private void calculateShedule_Helper(Node parent, Scene scene)       //допоміжна рекурсивна функція для складання розкладу по дереву станів
         {
             if (parent.AcceptedSpeakerNode != null)            //проходимо по дереву станів в крайній лівий листок
             { 

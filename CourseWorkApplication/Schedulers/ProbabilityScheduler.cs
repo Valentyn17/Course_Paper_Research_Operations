@@ -18,22 +18,26 @@ namespace CourseWorkApplication
         /// </summary>
         /// <param name="scene1"></param>
         /// <param name="scene2"></param>
-        public void CalculateScedule(out Scene scene1, out Scene scene2) 
+        public void CalculateSchedule(out Scene scene1, out Scene scene2) 
         {
             scene1 = new Scene();  //перша сцена
             scene2 = new Scene();  //друга сцена
             var Rand = new Random();
             int counterForRepeating = 0;
 
-            while (counterForRepeating < 30)   //вихід з циклу коли рекордний розвязок не збільшується протягом m разів
+            while (counterForRepeating < _speakers.Count*2)   //вихід з циклу коли рекордний розвязок не збільшується протягом m разів
             {
                 int inCounter = 0;              
                 var scene1now = new Scene();
                 var scene2now = new Scene();
                 var speakers = _speakers.ToList();
 
-                while (inCounter < 10 || speakers.Count == 0)  //вихід з циклу коли ми протягом t разів не додаємо ніякого спікера до сцен
+                while (inCounter < speakers.Count*2)  //вихід з циклу коли ми протягом t разів не додаємо ніякого спікера до сцен
                 {
+                    if (speakers.Count == 0) {
+                        counterForRepeating++;
+                        continue;
+                    }
                     var randomDouble = Rand.NextDouble();
                     CountProbabilities(speakers);
 

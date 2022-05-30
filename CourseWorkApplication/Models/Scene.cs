@@ -23,7 +23,7 @@ namespace CourseWorkApplication
 
         public bool CheckForAddGreedyAlg(Speaker speaker)
         {
-            if(Speakers.Count == 0 || speaker.EndOfSpeech > Speakers.Last().StartOfSpeech)
+            if(Speakers.Count == 0 || speaker.StartOfSpeech>=Speakers.Last().EndOfSpeech    )
                return true;
             return false;
         }
@@ -53,6 +53,7 @@ namespace CourseWorkApplication
         } 
 
         public void ShowSchedule() {
+            Speakers = Speakers.OrderBy(x => x.StartOfSpeech).ToList();
             foreach (Speaker speaker in Speakers)
             {
                 Console.WriteLine($"Number  {speaker.Number}\t" +

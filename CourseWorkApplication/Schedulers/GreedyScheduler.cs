@@ -12,7 +12,7 @@ namespace CourseWorkApplication.Schedulers
         {
             _speakers = Speakers;
         }
-        public void calculateScedule(out Scene scene1,  out Scene scene2)
+        public void CalculateSchedule(out Scene scene1,  out Scene scene2)
         {
             scene1 = new Scene();
             scene2 = new Scene();   
