@@ -17,10 +17,10 @@ namespace CourseWorkApplication
             GreedyScheduler grScheduler;
             ProbabilityScheduler probScheduler;
             TreeScheduler treeScheduler;
-            int[] experimentDimensions = { 10, 20, 30, 40 };
-
+            int[] experimentDimensions = { 5, 20, 30, 40 };
 
             int menuNumber = Menu();
+
             while (menuNumber > 0)
             {
                 switch (menuNumber)
@@ -51,8 +51,14 @@ namespace CourseWorkApplication
                         }
                     case 3:
                         {
+                            using StreamWriter file = new StreamWriter(
+                                @"E:\\III Course Semester 2\\Курсова Дослідження операцій\\CourseWorkApplication\\Experiment_Acc_Info.txt",false);
+                            using StreamWriter timefile = new StreamWriter(
+                                @"E:\\III Course Semester 2\\Курсова Дослідження операцій\\CourseWorkApplication\\Experiment_Time_Info.txt",false);
                             foreach (var item in experimentDimensions)
                             {
+                                int[,] time = new int[3,5];
+                                double[,] accuracy = new double[3, 5];
                                 Console.WriteLine();
                                 Console.WriteLine("Count of speakers: {0}", item);
                                 for (int i = 0; i <5; i++)
@@ -68,6 +74,7 @@ namespace CourseWorkApplication
 
                                     var watch1 = System.Diagnostics.Stopwatch.StartNew();
                                     grScheduler.CalculateSchedule(out scene1, out scene2);
+                                    var value1 = scene1.Count + scene2.Count;
                                     watch1.Stop();
                                     var elapsedMsGr = watch1.ElapsedMilliseconds;
                                     
@@ -79,6 +86,7 @@ namespace CourseWorkApplication
 
                                     var watch2 = System.Diagnostics.Stopwatch.StartNew();
                                     probScheduler.CalculateSchedule(out scene1, out scene2);
+                                    var value2 = scene1.Count + scene2.Count;
                                     watch2.Stop();
                                     var elapsedMsPr = watch2.ElapsedMilliseconds;
 
@@ -90,6 +98,7 @@ namespace CourseWorkApplication
 
                                     var watch3 = System.Diagnostics.Stopwatch.StartNew();
                                     treeScheduler.CalculateSchedule(out scene1, out scene2);
+                                    var value3 = scene1.Count + scene2.Count;
                                     watch3.Stop();
                                     var elapsedMsTr = watch3.ElapsedMilliseconds;
                                     Console.ForegroundColor = ConsoleColor.Green;
@@ -97,7 +106,32 @@ namespace CourseWorkApplication
                                     Console.WriteLine($"Value of target function: {scene1.Count + scene2.Count}");
                                     Console.ResetColor();
                                     Console.WriteLine($"Time of executing(milliseconds): {elapsedMsTr}");
+                                    time[0, i] = (int)elapsedMsGr;
+                                    time[1, i] = (int)elapsedMsPr;
+                                    time[2, i] = (int)elapsedMsTr;
+                                    accuracy[0, i] = value1 > value3 ? 0 : 100 - 100 * (double)value1 / value3;
+                                    accuracy[1, i] = value2 > value3 ? 0 : 100 - 100 * (double)value2 / value3;
+                                    accuracy[2, i] = 100 - 100 * (double)value3 / value3;
                                 }
+                                double[] averageTime = new double[3];
+                                double[] averageAccuracy = new double[3];
+                                for (int i = 0; i <3; i++)
+                                {
+                                    int timeSum = 0;
+                                    double accuracySum = 0;
+                                    for (int j = 0; j < 5; j++)
+                                    {
+                                        timeSum+=time[i,j];
+                                        accuracySum+=accuracy[i,j];
+                                    }
+                                    averageTime[i] = (double)timeSum / 5;
+                                    averageAccuracy[i]= accuracySum / 5;
+                                    
+                                    file.WriteLine(item + " " + Math.Round(averageAccuracy[i], 2)); //output to a file accuracy info
+                                    timefile.WriteLine(item + " " + averageTime[i]); //output to a file time info
+
+                                }
+
                             }
                             
                             break;
@@ -129,10 +163,18 @@ namespace CourseWorkApplication
                 "3-Do the experiment");
             Console.ResetColor();
             Console.Write("Input number here: ");
-            int number = Convert.ToInt32(Console.ReadLine());
-            if (number < 1 || number > 3)
+            try
+            {
+                int number = Convert.ToInt32(Console.ReadLine());
+                if (number < 1 || number > 3)
+                    return 0;
+                return number;
+            }
+            catch {
                 return 0;
-            return number;
+            }
+            
+            
 
         }
 

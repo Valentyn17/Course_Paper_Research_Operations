@@ -69,10 +69,13 @@ namespace CourseWorkApplication.Schedulers.BFS_Scheduler
             _speakers.Remove(Root.speaker);
             calculateShedule_Helper(Root, scene1);                     //обираємо інших спікерів та додаємо їх виступи у розклад
 
-            Root = null;   // обнуляємо корневий елемент
-            buildTree();   // //будуємо дерево для другої сцени
-            scene2.AddSpeaker(Root.speaker);  
-            calculateShedule_Helper(Root, scene2);
+            if (_speakers.Count != 0)
+            {
+                Root = null;   // обнуляємо корневий елемент
+                buildTree();   // //будуємо дерево для другої сцени
+                scene2.AddSpeaker(Root.speaker);
+                calculateShedule_Helper(Root, scene2);
+            }
 
         }
         private void calculateShedule_Helper(Node parent, Scene scene)       //допоміжна рекурсивна функція для складання розкладу по дереву станів
